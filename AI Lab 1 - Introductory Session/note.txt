@@ -1,0 +1,21 @@
+Steps To Complete Lab Task/Project -
+	
+	1. Choosing Subfield of NLP or CV
+
+	2. Searching Papers on Google Scholars
+		
+		-> Search like: NLP + Sentiment Analysis
+
+		-> Select papers of last 5 years
+
+	3. Finding At least 20 Papers
+	
+	4. Reading Paper's Abstract and Conclusion
+
+	5. Try to Understand what type of things have done
+
+	6. Pick Points
+
+	7. Start Deep-Dive
+
+	8. Continue Project Work & Research
