@@ -1,0 +1,12 @@
+id - year - paper title - dbthanks - abstract - conclusion - purpose - objective - major contribution - findings - result - methodology - dataset - future scope - practical implementation
+
+
+
+tools -
+	
+	scispace
+
+
+Suggested Topics -
+	
+	next word prediction
