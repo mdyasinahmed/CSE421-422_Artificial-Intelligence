@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>AFINN Sentiment Analysis - Improved Version</title>
+
+  <!-- Bootstrap (default) -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+    }
+
+    .navbar-custom {
+      background-color: #2196f3;
+      border: none;
+      border-radius: 0;
+    }
+
+    .navbar-custom .navbar-brand,
+    .navbar-custom .nav>li>a {
+      color: #fff !important;
+      font-weight: 600;
+    }
+
+    .navbar-custom .navbar-brand:hover,
+    .navbar-custom .nav>li>a:hover {
+      color: #ffe082 !important;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      margin: 10px 0;
+    }
+
+    .jumbotron {
+      background: #ffffff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      max-width: 100%;
+      width: 100%;
+    }
+
+    textarea {
+      margin-top: 10px;
+      width: 100%;
+      height: 160px;
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #90caf9;
+      resize: none;
+      font-size: 15px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #5e97d0;
+      box-shadow: 0 0 6px rgba(135, 186, 236, 0.5);
+    }
+
+    pre {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    h3 {
+      margin-top: 25px;
+      color: #1976d2;
+      font-weight: 600;
+    }
+
+    .btn-custom {
+      background: #2196f3;
+      color: #fff;
+      border-radius: 25px;
+      padding: 8px 20px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .btn-custom:hover {
+      background: #1976d2;
+      color: #fff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px 0;
+      font-size: 13px;
+      color: #777;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+
+<body role="document">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-custom navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">AFINN Sentiment Analysis - Improved Version</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <div class="navbar-form">
+            <div class="btn-group">
+              <button class="btn btn-custom dropdown-toggle" type="button" id="languageSelector" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true">
+                English
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="languageSelector" href="#">English</a></li>
+                <li><a class="languageSelector" href="#">Danish</a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main content (centered vertically & horizontally) -->
+  <div class="main-content">
+    <div class="container theme-showcase" role="main">
+      <div class="jumbotron">
+        <p>
+          AFINN is a lexicon of words rated for
+          <a href="#" data-toggle="tooltip" title='Valence means the intrinsic attractiveness "good"-ness
+          or averseness "bad"-ness of an event or situation'>valence</a>,
+          ranging from -5 (negative) to +5 (positive). This implementation uses
+          <a href="http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010">AFINN-en-165</a>.
+        </p>
+
+        <h3>Enter some text below for real-time (in-browser) sentiment analysis:</h3>
+        <textarea id="txt" placeholder="Type or paste your text here..."></textarea>
+
+        <h3>Verdict:</h3>
+        <pre id="result">Waiting for input...</pre>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 AFINN Sentiment Analysis | Enhanced with Better Accuracy.
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <!-- English words -->
+  <script src="afinn_en.js"></script>
+  <!-- Danish words -->
+  <script src="afinn_da.js"></script>
+  <!-- Emoticons -->
+  <script src="afinn_emoticon.js"></script>
+  <!-- Algorithm -->
+  <script src="sentiment.js"></script>
+
+  <script>
+    var afinn = $.extend(afinn_en, afinn_emoticon);
+
+    function setLanguage(languageName) {
+      $("#result").empty().text("Waiting for input...");
+      $("#languageSelector").text(languageName);
+      switch (languageName) {
+        case 'English':
+          afinn = $.extend(afinn_en, afinn_emoticon);
+          break;
+        case 'Danish':
+          afinn = $.extend(afinn_da, afinn_emoticon);
+          break;
+      }
+    }
+
+    $(document).ready(function () {
+      $(".languageSelector").on("click", function (e) {
+        e.preventDefault();
+        setLanguage($(this).text());
+      });
+
+      $('[data-toggle="tooltip"]').tooltip({
+        'placement': 'bottom'
+      });
+
+      $('#txt').focus();
+      $('#txt').bind('input propertychange', function () {
+        var sentiment_result = sentiment($('#txt').val())
+        $('#result').text(JSON.stringify(sentiment_result, undefined, 2));
+      });
+    });
+  </script>
+</body>
+
+</html>
